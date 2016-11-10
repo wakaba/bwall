@@ -59,4 +59,6 @@ test-deps: deps
 test-main:
 	$(PROVE) t/*.t
 
+always:
+
 ## License: Public Domain.
