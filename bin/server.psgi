@@ -7,7 +7,7 @@ use Web::URL;
 use Web::Transport::ConnectionClient;
 use JSON::PS;
 
-my $DatabaseURL = Web::URL->parse_string ($ENV{DATABASE_URL} // '')
+my $DatabaseURL = Web::URL->parse_string ($ENV{DATABASE_URL} // die "Bad |DATABASE_URL|")
     // die "Bad |DATABASE_URL|";
 
 return sub {
@@ -76,6 +76,10 @@ return sub {
       })->then (sub {
         return $client->close;
       });
+    }
+
+    if (@$path == 1 and $path->[0] eq 'robots.txt') {
+      return $app->send_plain_text ("User-agent: *\nDisallow: /");
     }
 
     return $app->send_error (404);
