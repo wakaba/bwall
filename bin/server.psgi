@@ -25,6 +25,9 @@ return sub {
   return $app->execute_by_promise (sub {
     my $path = $app->path_segments;
 
+    $http->set_response_header
+        ('Strict-Transport-Security' => 'max-age=2592000; includeSubDomains; preload');
+
     ## GET /wall/{group}
     ## GET /wall/{group}/html
     if (((@$path == 2 and $path->[0] eq 'wall') or

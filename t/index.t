@@ -51,9 +51,10 @@ test {
     my $res = $_[0];
     test {
       is $res->status, 404;
+      ok $res->header ('Strict-Transport-Security');
     } $c;
   });
-} n => 1;
+} n => 2;
 
 test {
   my $c = shift;

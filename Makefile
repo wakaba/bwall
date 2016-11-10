@@ -12,7 +12,13 @@ updatenightly: local/bin/pmbp.pl
 
 ## ------ Setup ------
 
-deps: git-submodules pmbp-install
+deps: always
+	true # dummy for make -q
+ifdef PMBP_HEROKU_BUILDPACK
+else
+	$(MAKE) git-submodules
+endif
+	$(MAKE) pmbp-install
 
 git-submodules:
 	$(GIT) submodule update --init
@@ -30,6 +36,17 @@ pmbp-install: pmbp-upgrade
 	perl local/bin/pmbp.pl $(PMBP_OPTIONS) --install \
             --create-perl-command-shortcut @perl \
             --create-perl-command-shortcut @prove
+
+create-commit-for-heroku:
+	git remote rm origin
+	rm -fr deps/pmtar/.git deps/pmpp/.git modules/*/.git
+	git add -f deps/pmtar/* #deps/pmpp/*
+	rm -fr ./t_deps/modules
+	git rm .gitmodules
+	git rm -r t_deps/modules
+	git rm modules/* --cached
+	git add -f modules/*/*
+	git commit -m "for heroku"
 
 ## ------ Tests ------
 
