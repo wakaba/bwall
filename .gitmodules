@@ -32,9 +32,13 @@
 	track = master
 [submodule "modules/charclass"]
 	path = modules/charclass
-	url = git://github.com/wakaba/perl-charclass
+	url = https://github.com/wakaba/perl-charclass
 	track = master
 [submodule "modules/ooutils"]
 	path = modules/ooutils
-	url = git://github.com/wakaba/perl-ooutils
+	url = https://github.com/wakaba/perl-ooutils
+	track = master
+[submodule "modules/json-ps"]
+	path = modules/json-ps
+	url = https://github.com/wakaba/perl-json-ps
 	track = master
