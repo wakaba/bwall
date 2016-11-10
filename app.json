@@ -1,0 +1,12 @@
+{
+  "name": "bwall",
+  "website": "https://github.com/wakaba/bwall",
+  "buildpacks": [
+    {"url": "https://github.com/wakaba/heroku-buildpack-perl-pmbp"}
+  ],
+  "env": {
+    "DATABASE_URL": {
+      "description": "URL of the Elasticsearch database"
+    }
+  }
+}
