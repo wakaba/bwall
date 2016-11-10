@@ -10,6 +10,15 @@ use JSON::PS;
 my $DatabaseURL = Web::URL->parse_string ($ENV{DATABASE_URL} // die "Bad |DATABASE_URL|")
     // die "Bad |DATABASE_URL|";
 
+sub e ($) {
+  my $s = $_[0];
+  $s =~ s/&/&amp;/g;
+  $s =~ s/</&lt;/g;
+  $s =~ s/>/&gt;/g;
+  $s =~ s/"/&quot;/g;
+  return $s;
+} # e
+
 return sub {
   my $http = Wanage::HTTP->new_from_psgi_env ($_[0]);
   my $app = Warabe::App->new_from_http ($http);
@@ -17,8 +26,11 @@ return sub {
     my $path = $app->path_segments;
 
     ## GET /wall/{group}
-    if (@$path == 2 and $path->[0] eq 'wall' and
-        $path->[1] =~ /\A[A-Za-z0-9_.-]{1,20}\z/) {
+    ## GET /wall/{group}/html
+    if (((@$path == 2 and $path->[0] eq 'wall') or
+         (@$path == 3 and $path->[0] eq 'wall' and $path->[2] eq 'html')) and
+        $path->[1] =~ /\A([A-Za-z0-9_.-]{1,100})/) {
+      my $is_html = @$path == 3;
       my $client = Web::Transport::ConnectionClient->new_from_url ($DatabaseURL);
       return $client->request (
         path => [$path->[1], '_search'],
@@ -29,10 +41,29 @@ return sub {
         my $res = $_[0];
         die $res unless $res->status == 200;
         my $json = json_bytes2perl $res->body_bytes;
-        $app->http->set_response_header ('content-type', 'application/json');
-        $app->http->send_response_body_as_ref
-            (\perl2json_bytes ({map { $_->{_source}->{name} => $_->{_source} } @{$json->{hits}->{hits}}}));
-        $app->http->close_response_body;
+        my $data = {map { $_->{_source}->{name} => $_->{_source} } @{$json->{hits}->{hits}}};
+        if ($is_html) {
+          $app->http->set_response_header ('content-type', 'text/html;charset=utf-8');
+          $app->http->send_response_body_as_text
+              (sprintf q{<!DOCTYPE HTML><title>%s</title><style>.PASS{background:green;color:white}.FAIL{background:red;color:white}</style><h1>%s</h1><table><tbody>%s</table>},
+                   e $path->[1],
+                   e $path->[1],
+                   join '', map {
+                     my @t = gmtime $_->{timestamp};
+                     sprintf q{<tr><th>%s<td class="%s"><time>%04d-%02d-%02dT%02d:%02d:%02dZ</time><td class="%s">%s<td>%s},
+                         e $_->{name},
+                         $_->{timestamp} + 7*24*60*60 < time ? 'FAIL' : '',
+                         $t[5]+1900, $t[4]+1, $t[3], $t[2], $t[1], $t[0],
+                         $_->{failed} ? 'FAIL' : 'PASS',
+                         $_->{failed} ? 'FAIL' : 'PASS',
+                         e $_->{status};
+                   } sort { $b->{timestamp} <=> $a->{timestamp} } values %$data);
+          $app->http->close_response_body;
+        } else {
+          $app->http->set_response_header ('content-type', 'application/json');
+          $app->http->send_response_body_as_ref (\perl2json_bytes ($data));
+          $app->http->close_response_body;
+        }
       });
     }
 
@@ -41,8 +72,8 @@ return sub {
     ##   fail={boolean}
     ##   status={string}
     if (@$path == 3 and $path->[0] eq 'ping' and
-        $path->[1] =~ /\A[A-Za-z0-9_.-]{1,20}\z/ and
-        $path->[2] =~ /\A[A-Za-z0-9_.-]{1,20}\z/) {
+        $path->[1] =~ /\A[A-Za-z0-9_.-]{1,100}\z/ and
+        $path->[2] =~ /\A[A-Za-z0-9_.-]{1,100}\z/) {
       $app->requires_request_method ({POST => 1});
       $app->requires_same_origin
           if defined $app->http->get_request_header ('Origin');
