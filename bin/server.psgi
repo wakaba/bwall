@@ -3,6 +3,8 @@ use strict;
 use warnings;
 use Wanage::HTTP;
 use Warabe::App;
+use Digest::SHA;
+use Web::Encoding;
 use Web::URL;
 use Web::Transport::ConnectionClient;
 use JSON::PS;
@@ -30,13 +32,13 @@ return sub {
 
     ## GET /wall/{group}
     ## GET /wall/{group}/html
-    if (((@$path == 2 and $path->[0] eq 'wall') or
-         (@$path == 3 and $path->[0] eq 'wall' and $path->[2] eq 'html')) and
-        $path->[1] =~ /\A([A-Za-z0-9_.-]{1,100})/) {
+    if ((@$path == 2 and $path->[0] eq 'wall') or
+        (@$path == 3 and $path->[0] eq 'wall' and $path->[2] eq 'html')) {
+      my $egroup = sha1_hex encode_web_utf8 $path->[1];
       my $is_html = @$path == 3;
       my $client = Web::Transport::ConnectionClient->new_from_url ($DatabaseURL);
       return $client->request (
-        path => [$path->[1], '_search'],
+        path => [$egroup, '_search'],
         basic_auth => [$DatabaseURL->username, $DatabaseURL->password],
         headers => {'Content-Type' => 'application/json'},
         body => (perl2json_bytes {query => {match_all => {}}}),
@@ -74,9 +76,7 @@ return sub {
     ##   pass={boolean}
     ##   fail={boolean}
     ##   status={string}
-    if (@$path == 3 and $path->[0] eq 'ping' and
-        $path->[1] =~ /\A[A-Za-z0-9_.-]{1,100}\z/ and
-        $path->[2] =~ /\A[A-Za-z0-9_.-]{1,100}\z/) {
+    if (@$path == 3 and $path->[0] eq 'ping') {
       $app->requires_request_method ({POST => 1});
       $app->requires_same_origin
           if defined $app->http->get_request_header ('Origin');
@@ -89,6 +89,8 @@ return sub {
       my $status = $app->text_param ('status') // '';
       $status = substr $status, 0, 20;
 
+      my $egroup = sha1_hex encode_web_utf8 $path->[1];
+      my $ename = sha1_hex encode_web_utf8 $path->[2];
       my $data = {
         group => $path->[1],
         name => $path->[2],
@@ -100,7 +102,7 @@ return sub {
       my $client = Web::Transport::ConnectionClient->new_from_url ($DatabaseURL);
       return $client->request (
         method => 'PUT',
-        path => [$data->{group}, $data->{name}],
+        path => [$egroup, $ename],
         basic_auth => [$DatabaseURL->username, $DatabaseURL->password],
         headers => {'Content-Type' => 'application/json'},
         body => (perl2json_bytes $data),

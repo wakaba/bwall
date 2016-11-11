@@ -1,1 +1,2 @@
+Digest::SHA
 Path::Tiny
