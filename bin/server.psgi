@@ -3,7 +3,7 @@ use strict;
 use warnings;
 use Wanage::HTTP;
 use Warabe::App;
-use Digest::SHA;
+use Digest::SHA qw(sha1_hex);
 use Web::Encoding;
 use Web::URL;
 use Web::Transport::ConnectionClient;
