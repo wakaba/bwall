@@ -41,7 +41,7 @@ return sub {
         path => [$egroup, '_search'],
         basic_auth => [$DatabaseURL->username, $DatabaseURL->password],
         headers => {'Content-Type' => 'application/json'},
-        body => (perl2json_bytes {query => {match_all => {}}}),
+        body => (perl2json_bytes {query => {match_all => {}}, size => 10000}),
       )->then (sub {
         my $res = $_[0];
         die $res unless $res->status == 200;
