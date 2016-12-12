@@ -109,6 +109,22 @@ return sub {
       )->then (sub {
         die $_[0] unless $_[0]->is_success;
         return $app->send_error (200, reason_phrase => 'Pong');
+      })->catch (sub {
+        my $error = $_[0];
+        warn $error;
+        my $url = $ENV{IKACHAN_URL} // return;
+        my $channel = $ENV{IKACHAN_CHANNEL} // return;
+        my $client = Web::Transport::ConnectionClient->new_from_url ($url);
+        return $client->request (
+          method => 'POST',
+          path => ['privmsg'],
+          params => {
+            channel => $channel,
+            message => "bwall: $data->{group}/$data->{name}: $error",
+          },
+        )->then (sub {
+          return $client->close;
+        });
       })->then (sub {
         return $client->close;
       });
