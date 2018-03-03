@@ -1,0 +1,11 @@
+{
+  "travisci": {
+    "pmbp": "5.10+",
+    "merger": 1,
+    "notifications": "suika"
+  },
+  "circleci": {
+    "pmbp": 1,
+    "heroku": 1
+  }
+}
