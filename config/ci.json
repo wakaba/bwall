@@ -6,6 +6,7 @@
   },
   "circleci": {
     "pmbp": 1,
-    "heroku": 1
+    "heroku": 1,
+    "gaa": 1
   }
 }
