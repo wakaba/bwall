@@ -4,7 +4,7 @@ Canary::Stability~2012
 Carp~1.38
 Cwd~3.74
 Data::Dumper~2.161
-Digest::SHA~6.01
+Digest::SHA~6.02
 Encode~2.97
 Exporter::Lite~0.08
 File::Temp~0.2304
