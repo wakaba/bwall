@@ -22,5 +22,5 @@ Socket~2.027
 Term::ANSIColor~4.06
 Test::More~1.302136
 Time::HiRes~1.9758
-Time::Local~1.25
+Time::Local~1.27
 common::sense~3.74
