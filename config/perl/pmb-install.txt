@@ -2,7 +2,7 @@ AnyEvent~7.14
 AnyEvent::Fork~1.31
 Canary::Stability~2012
 Carp~1.38
-Cwd~3.74
+Cwd~3.75
 Data::Dumper~2.161
 Digest::SHA~6.02
 Encode~2.98
