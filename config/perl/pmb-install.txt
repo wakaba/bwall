@@ -5,7 +5,7 @@ Carp~1.50
 Cwd~3.75
 Data::Dumper~2.173
 Digest::SHA~6.02
-Encode~2.98
+Encode~2.99
 Exporter::Lite~0.08
 File::Temp~0.2309
 Filter::Util::Call~1.59
