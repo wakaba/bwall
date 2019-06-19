@@ -15,3 +15,4 @@
 - "../../modules/web-encodings.2" build tests
 - "../../modules/web-url.2" build tests
 - "../../modules/json-ps" build tests
+- "../../modules/streams" build tests
