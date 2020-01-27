@@ -1,6 +1,5 @@
 AnyEvent~7.17
 AnyEvent::Fork~1.31
-AnyEvent::Handle
 Canary::Stability~2013
 Carp~1.50
 Cwd~3.75
@@ -22,5 +21,5 @@ Socket~2.029
 Term::ANSIColor~5.01
 Test::More~1.302171
 Time::HiRes~1.9760
-Time::Local~1.28
+Time::Local~1.30
 common::sense~3.74
