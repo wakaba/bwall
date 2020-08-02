@@ -19,7 +19,7 @@ Proc::FastSpawn~1.2
 Scalar::Util~1.55
 Socket~2.030
 Term::ANSIColor~5.01
-Test::More~1.302175
+Test::Builder~1.302175
 Time::HiRes~1.9760
 Time::Local~1.30
 common::sense~3.75
