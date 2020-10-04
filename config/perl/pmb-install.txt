@@ -6,7 +6,7 @@ Cwd~3.75
 Data::Dumper~2.173
 Digest::SHA~6.02
 Exporter::Lite~0.08
-File::Temp~0.2310
+File::Temp~0.2311
 Filter::Util::Call~1.60
 IO::FDPass~1.2
 IO::Handle~1.42
@@ -19,7 +19,7 @@ Proc::FastSpawn~1.2
 Scalar::Util~1.55
 Socket~2.030
 Term::ANSIColor~5.01
-Test::More~1.302181
+Test::Builder~1.302181
 Time::HiRes~1.9764
 Time::Local~1.30
 common::sense~3.75
