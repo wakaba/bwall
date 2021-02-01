@@ -1,5 +1,4 @@
 {
-  "travisci": {},
   "circleci": {
     "pmbp": 1,
     "heroku": 1,
