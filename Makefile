@@ -39,6 +39,7 @@ pmbp-install: pmbp-upgrade
             --create-perl-command-shortcut @prove
 
 create-commit-for-heroku:
+	git config --global url."https://XXX:$$HEROKU_APP_NAME@git.heroku.com/".insteadOf git@heroku.com:
 	git remote rm origin
 	rm -fr deps/pmtar/.git deps/pmpp/.git modules/*/.git
 	git add -f deps/pmtar/* #deps/pmpp/*
