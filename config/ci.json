@@ -1,4 +1,7 @@
 {
+  "travisci": {
+    "empty": true
+  },
   "circleci": {
     "pmbp": 1,
     "heroku": 1,
