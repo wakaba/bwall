@@ -76,6 +76,7 @@ return sub {
     ##   pass={boolean}
     ##   fail={boolean}
     ##   status={string}
+    ##   time={unixtime} defaulted to now
     if (@$path == 3 and $path->[0] eq 'ping') {
       $app->requires_request_method ({POST => 1});
       $app->requires_same_origin
@@ -89,6 +90,8 @@ return sub {
       my $status = $app->text_param ('status') // '';
       $status = substr $status, 0, 20;
 
+      my $time = 0+($app->bare_param ('time') || time);
+
       my $egroup = sha1_hex encode_web_utf8 $path->[1];
       my $ename = sha1_hex encode_web_utf8 $path->[2];
       my $data = {
@@ -96,7 +99,7 @@ return sub {
         name => $path->[2],
         failed => !!$failed,
         status => $status,
-        timestamp => time,
+        timestamp => $time,
       };
 
       my $client = Web::Transport::ConnectionClient->new_from_url ($DatabaseURL);
@@ -140,7 +143,7 @@ return sub {
 
 =head1 LICENSE
 
-Copyright 2016 Wakaba <wakaba@suikawiki.org>.
+Copyright 2016-2022 Wakaba <wakaba@suikawiki.org>.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as
