@@ -1,5 +1,6 @@
 AnyEvent~7.17
 AnyEvent::Fork~1.32
+AnyEvent::Handle
 Canary::Stability~2013
 Carp~1.50
 Cwd~3.75
@@ -16,10 +17,10 @@ Net::SSLeay~1.94
 Path::Class~0.37
 Path::Tiny~0.146
 Proc::FastSpawn~1.2
-Scalar::Util~1.65
+Scalar::Util~1.66
 Socket~2.038
 Term::ANSIColor~5.01
-Test::Builder~1.302204
+Test::More~1.302204
 Time::HiRes~1.9764
 Time::Local~1.35
 common::sense~3.75
